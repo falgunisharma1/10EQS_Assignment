@@ -2,9 +2,16 @@ const { cleanCSV, fetchLocalData, fetchPricingData } = require("./utils");
 
 //This function prints the data in a table format using console.table().
 function displayTable(data) {
-  console.table(data);
-}
+  const mappedData = data.map((row) => ({
+    "Product Name": row.productName,
+    "Our Price ($)": row.ourPrice,
+    Category: row.category,
+    "Current Stock": row.currentStock,
+    "Restock Threshold": row.restockThreshold,
+  }));
 
+  console.table(mappedData);
+}
 //This function processes cleaned data to compute the stock percentage difference and filters out items with a percentage difference below 10%.
 function getStockPercentages(cleanedData) {
   const result = [];
@@ -26,7 +33,6 @@ function getStockPercentages(cleanedData) {
   return result;
 }
 
-
 //Gets the data flow from cleaning CSV to fetching pricing data and analyzing inventory, including recommendations or alerts based on stock and price fluctuations.
 async function main() {
   const filePath = process.argv[2];
@@ -36,13 +42,11 @@ async function main() {
     return;
   }
 
-  const ITEM_EXTRA_restockThreshold_PERCENT = 10;
+  const ITEM_EXTRA_RESTOCK_THRESHOLD_PERCENT = 10;
 
   try {
-    
     const cleanedData = await cleanCSV(filePath);
     displayTable(cleanedData);
-
 
     //Commenting out the API call as its a paid version, instead stored api output in a variable and reuse that.
     // const pricingData = await fetchPricingData();
@@ -50,9 +54,8 @@ async function main() {
     //For using the local Data
     const pricingData = await fetchLocalData();
 
-
     const stockPercentages = getStockPercentages(cleanedData);
-    
+
     stockPercentages.forEach((item) => {
       const category = item.category;
       const pricingDataForCategory = pricingData.find(
@@ -62,7 +65,7 @@ async function main() {
       if (pricingDataForCategory.endRate > pricingDataForCategory.startRate) {
         if (item.percentageDifference <= 0) {
           console.log(
-            `ALERT: The price of ${category} has increased. You may want to restock ${item.productName} to only ${ITEM_EXTRA_restockThreshold_PERCENT}% higher than the threshold, and wait when price gets lower`
+            `ALERT: The price of ${category} has increased. You may want to restock ${item.productName} to only ${ITEM_EXTRA_RESTOCK_THRESHOLD_PERCENT}% higher than the threshold, and wait when price gets lower`
           );
         } else {
           console.log(
@@ -77,7 +80,7 @@ async function main() {
             `ALERT: The price of ${category} has declined. You may want to restock ${item.productName} a good chuck.`
           );
         } else if (
-          item.percentageDifference <= ITEM_EXTRA_restockThreshold_PERCENT
+          item.percentageDifference <= ITEM_EXTRA_RESTOCK_THRESHOLD_PERCENT
         ) {
           console.log(
             `Recommendation: The price of ${category} has declined. You can restock ${item.productName} if there is much higher demand, however there is no urgency as the restock threshold has not been met as of now.`
@@ -89,7 +92,5 @@ async function main() {
     console.error("Error during execution:", error);
   }
 }
-
-
 
 main();
