@@ -11,10 +11,11 @@
 
 <h2>Brief explanation of your approach</h2>
 <ul>
-  <li>Data quality issues found: Missing or invalid values in CSV rows, automatic conversion of "out of stock" to zero, and price formatting requiring cleaning.</li>
-  <li>Cleaned data summary: Extraction of product names, prices, categories (Coffee, Tea, Beverage), stock levels, and restock thresholds; categorization improvement for market analysis.</li>
-  <li>External data integration results: Real-time pricing data retrieved from Commodity API, API documentation available here, and local sample data stored due to API limitations.</li>
-  <li>Business insights: Inventory analysis shows stock levels below optimal restock thresholds; significant price changes in Coffee and Tea offer restocking opportunities; alerts set for products going above 10% of restock thresholds.</li>
+  <li>Data quality issues found: Missing or invalid values in CSV rows, current stock inconsistent values, product categorization and price formatting requiring cleaning.</li>
+  <li>By comparing the stock levels with current market pricing trends, it was clear that many products had stock levels below optimal restock thresholds.</li> 
+ <li>Alerts and Recommendations are set on all products if they go under 10% above their restock threshold values to make sure we can restock based on pricing data</li>
+<li> Example: If there is an item 'x' which has a current stock of 43 and the restock threshold is 40, and the price of this item is low in market, we recommend re-stocking, since current stock 43 is below 44(10% above 40). We do this since prices might increase in the future when the item actually reaches the threshold. </li>
+      <li>When items fall below normal threshold, based on pricing data we recommmend if they should stock more or less</li>
 </ul>
 
 <h2>Any known issues or limitations</h2>
