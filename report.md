@@ -1,5 +1,5 @@
-<h2>Data Analysis and External Data Integration Report<h2>
-<h4>
+Data Analysis and External Data Integration Report
+
 <ol> 
   <li>Data Quality Issues Found:
     <ul>
@@ -43,4 +43,4 @@
   </li>
 
 </ol>
-</h4>
+
